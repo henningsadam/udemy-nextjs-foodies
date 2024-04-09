@@ -1,23 +1,28 @@
 import Image from 'next/image';
-import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation';
 
 import classes from './page.module.css';
 import { getMeal } from '@/lib/meals';
 
-const MealDetailPage = ({ params }) => {
-  const meal = getMeal(params.slug)
-
+export const generateMetadata = async ({ params }) => {
+  const meal = getMeal(params.slug);
+  
   if (!meal) {
-    notFound()
+    notFound();
   }
+  return { title: meal.title, description: meal.summary };
+};
 
-  meal.instructions = meal.instructions.replace(/\n/g, '<br />')
+const MealDetailPage = ({ params }) => {
+  const meal = getMeal(params.slug);
+
+  meal.instructions = meal.instructions.replace(/\n/g, '<br />');
 
   return (
     <>
       <header className={classes.header}>
         <div className={classes.image}>
-          <Image fill src={meal.image} alt={meal.title}/>
+          <Image fill src={meal.image} alt={meal.title} />
         </div>
         <div className={classes.headerText}>
           <h1>{meal.title}</h1>
